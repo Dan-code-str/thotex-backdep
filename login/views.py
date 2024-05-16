@@ -23,7 +23,7 @@ class RegisterView(APIView):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return JsonResponse({'mensaje': 'Registro exitoso'})
         else:
             return JsonResponse({'mensaje': 'Registro fallido'})
 
