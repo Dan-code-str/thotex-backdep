@@ -1,1 +1,1 @@
-web: gunicorn thotex.wsgi
+web: python manage.py collectstatic && gunicorn thotex.wsgi
