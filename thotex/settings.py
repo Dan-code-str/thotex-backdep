@@ -117,14 +117,14 @@ DATABASES = {
 
     # Conexión a la base de datos MySQL - Desarrollo local
     
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'thotexdb',
-        'USER': 'root',
-        'PASSWORD': 'Thusenterprise?mysql',
-        'HOST': 'localhost',  # or the hostname where your MySQL server is running
-        'PORT': '3306',      # or the port on which your MySQL server is listening
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'thotexdb',
+    #     'USER': 'root',
+    #     'PASSWORD': 'Thusenterprise?mysql',
+    #     'HOST': 'localhost',  # or the hostname where your MySQL server is running
+    #     'PORT': '3306',      # or the port on which your MySQL server is listening
+    # }
 
     # Conexión a la base de datos MySQL - Prueba de modelos desde cero
     
@@ -138,14 +138,14 @@ DATABASES = {
     # }
     
     # Conexión a la base de datos MySQL - Producción AWS
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'thotexv1',
-    #     'USER': 'admin',
-    #     'PASSWORD': 'thotex2024',
-    #     'HOST': 'thotexdb.cpy8w6soo6le.us-east-2.rds.amazonaws.com',  # or the hostname where your MySQL server is running
-    #     'PORT': '3306',      # or the port on which your MySQL server is listening
-    # }
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'thotexv1',
+        'USER': 'admin',
+        'PASSWORD': 'thotex2024',
+        'HOST': 'thotexdb.cpy8w6soo6le.us-east-2.rds.amazonaws.com',  # or the hostname where your MySQL server is running
+        'PORT': '3306',      # or the port on which your MySQL server is listening
+    }
 }
 
 
