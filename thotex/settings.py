@@ -57,11 +57,13 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware'
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080",  # URL de la aplicaci�n Vue.js
-    "http://127.0.0.1:8080",
-    "https://thotex-deploy-alpha-build.vercel.app/"
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:8080",  # URL de la aplicaci�n Vue.js
+#     "http://127.0.0.1:8080",
+#     "https://thotex-deploy-alpha-build.vercel.app/"
+# ]
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOW_METHODS = (
     "DELETE",
