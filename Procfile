@@ -1,1 +1,1 @@
-web: python manage.py collectstatic && gunicorn thotex.wsgi
+web: gunicorn thotex.wsgi --log-file -
