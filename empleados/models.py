@@ -1,5 +1,6 @@
 from django.db import models
 from login.models import Municipio, Departamento
+from django.core.validators import MaxValueValidator, MinValueValidator
 # create your models here.
 
 class Persona(models.Model):
@@ -16,7 +17,7 @@ class Persona(models.Model):
     Per_nombre = models.CharField(max_length = 50, verbose_name='Nombre')
     Per_apellido = models.CharField(max_length = 50, verbose_name='Apellido')
     Per_correo = models.EmailField(max_length = 50, verbose_name='Correo', unique=True)
-    Per_telefono = models.IntegerField(verbose_name='Telefono')
+    Per_telefono = models.PositiveIntegerField(validators=[MaxValueValidator(9999999999), MinValueValidator(1000000000)], verbose_name='Telefono')
     Mun_nombre = models.ForeignKey(Municipio, verbose_name="Municipio", on_delete=models.CASCADE)
 
     class Meta:

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, Municipio, Departamento
 
 class UserSerializer(serializers.ModelSerializer):
     
@@ -21,4 +21,16 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
         
         return instance
+    
+
+class MunicipioSerializer(serializers.ModelSerializer):
+    
+    class Meta:     
+        model = Municipio
+        fields = '__all__'
+
+class DepartamentoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Departamento
+        fields = '__all__'
         
