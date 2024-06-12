@@ -12,7 +12,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode  
 from django.template.loader import render_to_string  
-from .token import account_activation_token
+from .token import account_activation_token, account_activation_token_verifier
 from django.core.mail import EmailMessage
 
 User = get_user_model()
@@ -32,7 +32,7 @@ class RegisterView(APIView):
         # serializer.is_valid()
         # serializer.data['is_active'] = False
         if serializer.is_valid():
-            serializer.validated_data['is_active'] = True
+            serializer.validated_data['is_active'] = False
             serializer.save()
             # Enviar correo de activacion 
             current_site = get_current_site(request)  
@@ -113,12 +113,12 @@ def activate(request, uidb64, token):
         user = User.objects.get(id=uid)  
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):  
         user = None  
-    if user is not None and account_activation_token.check_token(user, token):  
+    if user is not None and account_activation_token_verifier.check_token(user, token):  
         user.is_active = True  
         user.save()  
-        return JsonResponse('Gracias por confirmar tu correo')  
+        return JsonResponse('Gracias por confirmar tu correo', safe=False)  
     else:  
-        return JsonResponse('El enlace de activacion es invalido')  
+        return JsonResponse('El enlace de activacion es invalido', safe=False)  
         
 class MunicipioLista(generics.ListCreateAPIView):
     queryset = Municipio.objects.all()
