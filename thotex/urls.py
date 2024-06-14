@@ -18,6 +18,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,4 +30,6 @@ urlpatterns = [
     path('api/v1.0/', include('productos.urls')),
     path('api/v1.0/', include('transacciones.urls')),
     path('api/v1.0/', include('terceros.urls')),
+    path('api/v1.0/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/v1.0/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

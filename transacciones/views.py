@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from django.core import serializers
 from django.contrib.auth import authenticate, login, logout
 import requests
 
@@ -19,14 +20,16 @@ import requests
 class VentaLista(generics.ListCreateAPIView):
     queryset = Venta.objects.all()
     serializer_class = VentaSerializer
-    # permission_classes = [IsAuthenticated]
 
-    def get(self, request, *args, **kwargs):
-        token = request.COOKIES.get('jwt')
-        print(request)
-        print(token)
-        if not token:
+    def get_queryset(self):
+
+        request = self.request
+        auth_header = request.headers.get('Authorization')
+
+        if not auth_header or not auth_header.startswith('Bearer '):
             return JsonResponse({'mensaje': 'No hay token'}, status=status.HTTP_403_FORBIDDEN)
+
+        token = auth_header.split(' ')[1]
 
         try:
             payload = jwt.decode(token, 'secret', algorithms=['HS256'])
@@ -36,7 +39,14 @@ class VentaLista(generics.ListCreateAPIView):
             return JsonResponse({'mensaje': 'Token inválido'}, status=status.HTTP_403_FORBIDDEN)
 
         user = User.objects.filter(id=payload['id']).first()
-        return Venta.objects.filter(user=user)
+        if user is None:
+            return JsonResponse({'mensaje': 'Usuario no encontrado'}, status=status.HTTP_403_FORBIDDEN)
+        
+        ventas = Venta.objects.filter(Usr_codigo=user)
+        lista_ventas = list(ventas.values())
+
+        return JsonResponse({'data: ': lista_ventas}, safe=False)
+
 
     def post(self, request, *args, **kwargs):
         token = request.COOKIES.get('jwt')

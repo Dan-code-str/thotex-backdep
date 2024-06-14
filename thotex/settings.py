@@ -34,7 +34,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'rest_framework',
-    # 'rest_framework_simplejwt',
+    'rest_framework_simplejwt',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -178,6 +178,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 JWT_AUTH = {
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
 }
 
@@ -186,6 +187,12 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'thotexweb@gmail.com'  
 EMAIL_HOST_PASSWORD = 'sdst aboe evsw rwwl'  
 EMAIL_PORT = 587
+
+# Ensure CSRF and session cookies are properly set
+# CSRF_COOKIE_SECURE = False  # Set to True if using HTTPS
+# SESSION_COOKIE_SECURE = False  # Set to True if using HTTPS
+# CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8000/api/v1.0/ventas']  # Add your domain
+# SESSION_COOKIE_SAMESITE = 'Lax'  # Adjust as needed ('Lax', 'Strict', 'None')
 
 
 # Internationalization
