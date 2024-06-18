@@ -9,8 +9,6 @@ import jwt
 from login.models import User
 from rest_framework.response import Response
 
-
-# Create your views here.
 class EmpleadoLista(generics.ListCreateAPIView):
     queryset = Empleado.objects.all()
     serializer_class = EmpleadoSerializer
@@ -66,15 +64,15 @@ class EmpleadoLista(generics.ListCreateAPIView):
 
         user = User.objects.filter(id=payload['id']).first()
 
-        # per_correo = request.data.get('Persona', {}).get('Per_correo')
+        per_correo = request.data.get('Persona', {}).get('Per_correo')
         
-        # if per_correo and Persona.objects.filter(Per_correo=per_correo).exists():
-        #     return JsonResponse({"errors": {"Per_correo": ["This email is already in use."]}}, status=status.HTTP_400_BAD_REQUEST)
+        if per_correo and Persona.objects.filter(Per_correo=per_correo).exists():
+            return JsonResponse({"errors": {"Per_correo": ["Este correo ya está en uso"]}}, status=status.HTTP_400_BAD_REQUEST)
         print(request.data)
         serializer = EmpleadoSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(Usr_codigo=user)
-            return JsonResponse({"message": "Empleado creado exitosamente"}, status=status.HTTP_201_CREATED)
+            return JsonResponse({"mensaje": "Empleado creado exitosamente"}, status=status.HTTP_201_CREATED)
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class EmpleadoDetalle(generics.RetrieveUpdateDestroyAPIView):
@@ -114,11 +112,4 @@ class EmpleadoDetalle(generics.RetrieveUpdateDestroyAPIView):
 
     def perform_destroy(self, instance):
         instance.delete()
-    
-# def create_persona(sender, instance, created, **kwargs):
-#     if created:
-#         empleado_persona = Empleado(Per_nombre = instance)
-#         empleado_persona.save()
-        
-# post_save.connect(create_persona, sender = Empleado)
     

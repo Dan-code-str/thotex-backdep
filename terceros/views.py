@@ -11,8 +11,6 @@ from .models import *
 import jwt, datetime
 from rest_framework.permissions import IsAuthenticated
 
-# Create your views here.
-
 class ClienteLista(generics.ListCreateAPIView):
     serializer_class = ClienteSerializer
 
@@ -78,18 +76,33 @@ class ClienteLista(generics.ListCreateAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             serializer.save(Usr_codigo=user)
-            return JsonResponse({"message": "Cliente creado exitosamente"}, status=status.HTTP_201_CREATED)
+            return JsonResponse({"mensaje": "Cliente creado exitosamente"}, status=status.HTTP_201_CREATED)
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class ClienteDetalle(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Cliente.objects.all()
     serializer_class = ClienteSerializer
+
+    def get(self, request, *args, **kwargs):
+        register = ClienteSerializer(self.get_object()).data
+        
+        context = {
+            'data': register,
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = ClienteSerializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return JsonResponse(serializer.data)
+        
+        context = {
+            'data': serializer.data,
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
     
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -98,52 +111,10 @@ class ClienteDetalle(generics.RetrieveUpdateDestroyAPIView):
         self.perform_destroy(instance)
         self.perform_destroy(persona_instance)
 
-        return JsonResponse({"message": "Cliente eliminado exitosamente"}, status=status.HTTP_204_NO_CONTENT)
+        return JsonResponse({"mensaje": "Cliente eliminado exitosamente"}, status=status.HTTP_204_NO_CONTENT)
     
     def perform_destroy(self, instance):
         instance.delete()
-
-
-
-# class ClienteLista(generics.ListCreateAPIView):
-#     queryset = Cliente.objects.all()
-#     serializer_class = ClienteSerializer
-
-#     def post(self, request):
-#         per_correo = request.data.get('Per_nombre', {}).get('Per_correo')
-        
-#         if per_correo and Persona.objects.filter(Per_correo=per_correo).exists():
-#             return JsonResponse({"errors": {"Per_correo": ["This email is already in use."]}}, status=status.HTTP_400_BAD_REQUEST)
-
-#         serializer = ClienteSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return JsonResponse({"message": "Cliente creado exitosamente"}, status=status.HTTP_201_CREATED)
-#         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-# class ClienteDetalle(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Cliente.objects.all()
-#     serializer_class = ClienteSerializer
-
-#     def update(self, request, *args, **kwargs):
-#         instance = self.get_object()
-#         serializer = ClienteSerializer(instance, data=request.data, partial=True)
-#         serializer.is_valid(raise_exception=True)
-#         serializer.save()
-#         return JsonResponse(serializer.data)
-    
-#     def destroy(self, request, *args, **kwargs):
-#         instance = self.get_object()
-#         persona_instance = instance.Per_nombre
-
-#         self.perform_destroy(instance)
-#         self.perform_destroy(persona_instance)
-
-#         return JsonResponse({"message": "Cliente eliminado exitosamente"}, status=status.HTTP_204_NO_CONTENT)
-    
-#     def perform_destroy(self, instance):
-#         instance.delete()
-    
 
 class ProveedorLista(generics.ListCreateAPIView):
     queryset = Proveedor.objects.all()
@@ -153,7 +124,7 @@ class ProveedorLista(generics.ListCreateAPIView):
         serializer = ProveedorSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse({"message": "Proveedor creado exitosamente"}, status=status.HTTP_201_CREATED)
+            return JsonResponse({"mensaje": "Proveedor creado exitosamente"}, status=status.HTTP_201_CREATED)
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class ProveedorDetalle(generics.RetrieveUpdateDestroyAPIView):
@@ -175,7 +146,7 @@ class SedeProveedorLista(generics.ListCreateAPIView):
         serializer = SedeProveedorSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse({"message": "Sede creada exitosamente"}, status=status.HTTP_201_CREATED)
+            return JsonResponse({"mensaje": "Sede creada exitosamente"}, status=status.HTTP_201_CREATED)
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class SedeProveedorDetalle(generics.RetrieveUpdateDestroyAPIView):

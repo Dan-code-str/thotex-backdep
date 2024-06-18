@@ -8,8 +8,6 @@ from login.models import User
 import jwt
 from rest_framework.response import Response
 
-# Create your views here.
-
 class ProductoLista(generics.ListCreateAPIView):
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializer
@@ -68,16 +66,36 @@ class ProductoLista(generics.ListCreateAPIView):
         serializer = ProductoSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(Usr_codigo=user)
-            return JsonResponse({"message": "Producto creado exitosamente"}, status=status.HTTP_201_CREATED)
+            return JsonResponse({"mensaje": "Producto creado exitosamente"}, status=status.HTTP_201_CREATED)
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class ProductoDetalle(generics.RetrieveUpdateDestroyAPIView):
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializer
 
+    def get(self, request, *args, **kwargs):
+        register = ProductoSerializer(self.get_object()).data
+        
+        context = {
+            'data': register,
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = ProductoSerializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return JsonResponse(serializer.data)
+
+        context = {
+            'data': serializer.data,
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+    
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+
+        return JsonResponse({"mensaje": "Producto eliminado exitosamente"}, status=status.HTTP_204_NO_CONTENT)

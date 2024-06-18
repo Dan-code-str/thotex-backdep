@@ -1,7 +1,7 @@
 # from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login, logout
-from django.http import JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from .Serializer import UserSerializer, MunicipioSerializer, DepartamentoSerializer
 from .models import Municipio, Departamento
 from rest_framework import generics
@@ -29,8 +29,6 @@ User = get_user_model()
 class RegisterView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
-        # serializer.is_valid()
-        # serializer.data['is_active'] = False
         if serializer.is_valid():
             serializer.validated_data['is_active'] = False
             serializer.save()
@@ -48,7 +46,7 @@ class RegisterView(APIView):
                         mail_subject, message, to=[to_email]  
             )  
             email.send()  
-            return JsonResponse('Por favor confirma tu correo para completar el registro', safe=False)  
+            return JsonResponse({'mensaje': 'Por favor confirma tu correo para completar el registro'}, safe=False)  
         else:
             return JsonResponse({'mensaje': 'Registro fallido'})
 
@@ -62,6 +60,8 @@ class LoginView(APIView):
 
         user = authenticate(username=correo, password=contrasena)
         if user is not None:
+            if user.is_active == False:
+                return JsonResponse({'mensaje': 'Por favor activa tu cuenta'}, safe=False)
             login(request, user)
             payload = {
                 'id': user.id,
@@ -116,9 +116,14 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token_verifier.check_token(user, token):  
         user.is_active = True  
         user.save()  
-        return JsonResponse('Gracias por confirmar tu correo', safe=False)  
-    else:  
-        return JsonResponse('El enlace de activacion es invalido', safe=False)  
+        return HttpResponseRedirect('https://thotex.online')  # Redirige a la página especificada
+    else:
+        return JsonResponse('El enlace de activacion es invalido', safe=False)
+
+def DeleteUser(request, pk):
+    user = User.objects.get(id=pk)
+    user.delete()
+    return JsonResponse('Usuario eliminado', safe=False)
         
 class MunicipioLista(generics.ListCreateAPIView):
     queryset = Municipio.objects.all()
