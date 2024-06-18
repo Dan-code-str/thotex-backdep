@@ -19,39 +19,92 @@ import requests
 class VentaLista(generics.ListCreateAPIView):
     queryset = Venta.objects.all()
     serializer_class = VentaSerializer
-    # permission_classes = [IsAuthenticated]
 
-    def get(self, request, *args, **kwargs):
-        token = request.COOKIES.get('jwt')
-        print(request)
-        print(token)
-        if not token:
+    def get(self, request):
+        
+        request = self.request
+        auth_header = request.headers.get('Authorization')
+
+        if not auth_header or not auth_header.startswith('Bearer '):
             return JsonResponse({'mensaje': 'No hay token'}, status=status.HTTP_403_FORBIDDEN)
+
+        token = auth_header.split(' ')[1]
 
         try:
             payload = jwt.decode(token, 'secret', algorithms=['HS256'])
         except jwt.ExpiredSignatureError:
-            return JsonResponse({'mensaje': 'Token expirado'}, status=status.HTTP_403_FORBIDDEN)
+            return JsonResponse({'mensaje': 'Token inválido'}, status=status.HTTP_403_FORBIDDEN)
         except jwt.InvalidTokenError:
             return JsonResponse({'mensaje': 'Token inválido'}, status=status.HTTP_403_FORBIDDEN)
 
         user = User.objects.filter(id=payload['id']).first()
-        return Venta.objects.filter(user=user)
+
+        if user is None:
+            return JsonResponse({'mensaje': 'Usuario no encontrado'}, status=status.HTTP_403_FORBIDDEN)
+
+        ventas = Venta.objects.filter(Usr_codigo=user)
+
+        json_ventas = VentaSerializer(ventas, many=True).data
+
+        context = {
+            'data': json_ventas,
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+    # def get_queryset(self):
+
+    #     request = self.request
+    #     auth_header = request.headers.get('Authorization')
+
+    #     if not auth_header or not auth_header.startswith('Bearer '):
+    #         return JsonResponse({'mensaje': 'No hay token'}, status=status.HTTP_403_FORBIDDEN)
+
+    #     token = auth_header.split(' ')[1]
+
+    #     try:
+    #         payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+    #     except jwt.ExpiredSignatureError:
+    #         return JsonResponse({'mensaje': 'Token inválido'}, status=status.HTTP_403_FORBIDDEN)
+    #     except jwt.InvalidTokenError:
+    #         return JsonResponse({'mensaje': 'Token inválido'}, status=status.HTTP_403_FORBIDDEN)
+
+    #     user = User.objects.filter(id=payload['id']).first()
+
+    #     if user is None:
+    #         return JsonResponse({'mensaje': 'Usuario no encontrado'}, status=status.HTTP_403_FORBIDDEN)
+
+    #     ventas = Venta.objects.filter(Usr_codigo=user)
+    #     lista_ventas = list(ventas.values())
+
+    #     json_ventas = VentaSerializer(ventas, many=True).data
+
+    #     context = {
+    #         'data': json_ventas,
+    #     }
+    #     return Response(context, status=status.HTTP_200_OK)
+        # return JsonResponse({'data: ': lista_ventas}, safe=False)
+        # return Venta.objects.filter(Usr_codigo=user)
 
     def post(self, request, *args, **kwargs):
-        token = request.COOKIES.get('jwt')
-        print(token)
-        if not token:
+        request = self.request
+        auth_header = request.headers.get('Authorization')
+
+        if not auth_header or not auth_header.startswith('Bearer '):
             return JsonResponse({'mensaje': 'No hay token'}, status=status.HTTP_403_FORBIDDEN)
+
+        token = auth_header.split(' ')[1]
 
         try:
             payload = jwt.decode(token, 'secret', algorithms=['HS256'])
         except jwt.ExpiredSignatureError:
-            return JsonResponse({'mensaje': 'Token expirado'}, status=status.HTTP_403_FORBIDDEN)
+            return JsonResponse({'mensaje': 'Token inválido'}, status=status.HTTP_403_FORBIDDEN)
         except jwt.InvalidTokenError:
             return JsonResponse({'mensaje': 'Token inválido'}, status=status.HTTP_403_FORBIDDEN)
 
         user = User.objects.filter(id=payload['id']).first()
+
+        if user is None:
+            return JsonResponse({'mensaje': 'Usuario no encontrado'}, status=status.HTTP_403_FORBIDDEN)
 
         serializer = VentaSerializer(data=request.data)
         if serializer.is_valid():
@@ -111,6 +164,15 @@ class VentaDetalle(generics.RetrieveUpdateDestroyAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return JsonResponse(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+
+        return JsonResponse({"message": "Cliente eliminado exitosamente"}, status=status.HTTP_204_NO_CONTENT)
+    
+    def perform_destroy(self, instance):
+        instance.delete()
     
     
 class CompraLista(generics.ListCreateAPIView):
@@ -140,12 +202,64 @@ class CompraLista(generics.ListCreateAPIView):
 #     #         return JsonResponse({"message": "Compra creada exitosamente"}, status=status.HTTP_201_CREATED)
 #     #     return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def get(self, request):
+
+        request = self.request
+        auth_header = request.headers.get('Authorization')
+
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return JsonResponse({'mensaje': 'No hay token'}, status=status.HTTP_403_FORBIDDEN)
+
+        token = auth_header.split(' ')[1]
+
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            return JsonResponse({'mensaje': 'Token inválido'}, status=status.HTTP_403_FORBIDDEN)
+        except jwt.InvalidTokenError:
+            return JsonResponse({'mensaje': 'Token inválido'}, status=status.HTTP_403_FORBIDDEN)
+
+        user = User.objects.filter(id=payload['id']).first()
+
+        if user is None:
+            return JsonResponse({'mensaje': 'Usuario no encontrado'}, status=status.HTTP_403_FORBIDDEN)
+
+        compras = Compra.objects.filter(Usr_codigo=user)
+
+        json_type = CompraSerializer(compras, many=True).data
+
+        context = {
+            'data': json_type,
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
     def post(self, request):
+
+        request = self.request
+        auth_header = request.headers.get('Authorization')
+
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return JsonResponse({'mensaje': 'No hay token'}, status=status.HTTP_403_FORBIDDEN)
+
+        token = auth_header.split(' ')[1]
+
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            return JsonResponse({'mensaje': 'Token inválido'}, status=status.HTTP_403_FORBIDDEN)
+        except jwt.InvalidTokenError:
+            return JsonResponse({'mensaje': 'Token inválido'}, status=status.HTTP_403_FORBIDDEN)
+
+        user = User.objects.filter(id=payload['id']).first()
+
+        if user is None:
+            return JsonResponse({'mensaje': 'Usuario no encontrado'}, status=status.HTTP_403_FORBIDDEN)
+
         serializer = CompraSerializer(data=request.data)
         if serializer.is_valid():
-            usr_id = self.context['request'].user
-            serializer.save()
-            return JsonResponse({"message": "Compra creada exitosamente", "id": usr_id}, status=status.HTTP_201_CREATED)
+            serializer.save(Usr_codigo=user)
+            return JsonResponse({"message": "Compra creada exitosamente"}, status=status.HTTP_201_CREATED)
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # class CompraLista(generics.ListCreateAPIView):
@@ -196,4 +310,13 @@ class CompraDetalle(generics.RetrieveUpdateDestroyAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return JsonResponse(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+
+        return JsonResponse({"message": "Compra eliminada exitosamente"}, status=status.HTTP_204_NO_CONTENT)
+    
+    def perform_destroy(self, instance):
+        instance.delete()
     

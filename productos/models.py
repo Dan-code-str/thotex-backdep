@@ -1,5 +1,5 @@
 from django.db import models
-from login.models import Municipio
+from login.models import Municipio, User
 from terceros.models import Proveedor
 
 # Create your models here.
@@ -14,6 +14,7 @@ class Producto(models.Model):
     Prod_IVA = models.DecimalField(verbose_name="IVA", decimal_places=2, max_digits=3) #tipo de dato (Definir campo TIPO IVA - TOTAL IVA)
     Mun_nombre = models.ForeignKey(Municipio, verbose_name="Municipio", on_delete=models.CASCADE)
     Emp_codigo = models.ForeignKey(Proveedor, verbose_name="Empresa", on_delete=models.CASCADE)
+    Usr_codigo = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Usuario")
 
     class Meta:
         db_table = "Producto"

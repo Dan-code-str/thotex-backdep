@@ -1,5 +1,5 @@
 from django.db import models
-from empleados.models import Persona, Municipio
+from empleados.models import Persona, Municipio, User
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 # Create your models here.
@@ -9,6 +9,7 @@ class Cliente(models.Model):
     Cl_codigo = models.AutoField(primary_key=True)
     Cl_obligacion = models.CharField(verbose_name="Obligacion tributaria", max_length=100)
     Per_nombre = models.OneToOneField(Persona, on_delete=models.CASCADE)
+    Usr_codigo = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Usuario")
 
     class Meta:
         db_table = "Cliente"
