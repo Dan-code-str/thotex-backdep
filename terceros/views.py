@@ -68,12 +68,12 @@ class ClienteLista(generics.ListCreateAPIView):
         if user is None:
             return JsonResponse({'mensaje': 'Usuario no encontrado'}, status=status.HTTP_403_FORBIDDEN)
 
-        per_correo = request.data.get('Per_nombre', {}).get('Per_correo')
+        # per_correo = request.data.get('Per_nombre', {}).get('Per_correo')
         
-        if per_correo and Persona.objects.filter(Per_correo=per_correo).exists():
-            return JsonResponse({"errors": {"Per_correo": ["Este correo ya está en uso."]}}, status=status.HTTP_400_BAD_REQUEST)
+        # if per_correo and Persona.objects.filter(Per_correo=per_correo).exists():
+        #     return JsonResponse({"errors": {"Per_correo": ["Este correo ya está en uso."]}}, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = self.get_serializer(data=request.data)
+        serializer = ClienteSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(Usr_codigo=user)
             return JsonResponse({"mensaje": "Cliente creado exitosamente"}, status=status.HTTP_201_CREATED)
@@ -106,15 +106,8 @@ class ClienteDetalle(generics.RetrieveUpdateDestroyAPIView):
     
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        persona_instance = instance.Per_nombre
-
-        self.perform_destroy(instance)
-        self.perform_destroy(persona_instance)
-
-        return JsonResponse({"mensaje": "Cliente eliminado exitosamente"}, status=status.HTTP_204_NO_CONTENT)
-    
-    def perform_destroy(self, instance):
         instance.delete()
+        return JsonResponse({"mensaje": "Cliente eliminado exitosamente"}, safe=False)
 
 class ProveedorLista(generics.ListCreateAPIView):
     queryset = Proveedor.objects.all()

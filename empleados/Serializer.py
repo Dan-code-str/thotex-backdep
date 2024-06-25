@@ -37,7 +37,7 @@ class EmpleadoSerializer(serializers.ModelSerializer):
         persona.Per_apellido = persona_data.get('Per_apellido', persona.Per_apellido)
         persona.Per_correo = persona_data.get('Per_correo', persona.Per_correo)
         persona.Per_telefono = persona_data.get('Per_telefono', persona.Per_telefono)
-        persona.Mun_nombre = persona_data.get('Mun_nombre', persona.Mun_nombre)
+        # persona.Mun_nombre = persona_data.get('Mun_nombre', persona.Mun_nombre)
         persona.save()
         instance.save()
         return instance

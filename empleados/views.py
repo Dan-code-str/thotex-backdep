@@ -103,13 +103,6 @@ class EmpleadoDetalle(generics.RetrieveUpdateDestroyAPIView):
     
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        persona_instance = instance.Persona
-
-        self.perform_destroy(instance)
-        self.perform_destroy(persona_instance)
-
-        return JsonResponse({"mensaje": "Empleado eliminado exitosamente"}, status=status.HTTP_204_NO_CONTENT)
-
-    def perform_destroy(self, instance):
         instance.delete()
+        return JsonResponse({"mensaje":"Empleado eliminado exitosamente"}, safe=False)
     

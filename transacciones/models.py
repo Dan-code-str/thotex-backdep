@@ -32,7 +32,7 @@ class Compra(models.Model):
     Com_subtotal = models.DecimalField(verbose_name="Subtotal", decimal_places=2, max_digits=15)
     Com_precioTotal = models.DecimalField(verbose_name="Precio total", decimal_places=2, max_digits=15)
     Com_IVA = models.DecimalField(verbose_name="IVA", decimal_places=2, max_digits=3) #tipo de dato (IGUAL PRODUCTO)
-    Prov_codigo = models.ForeignKey(Proveedor, on_delete=models.CASCADE, verbose_name="Proveedor")
+    Cl_codigo = models.ForeignKey(Cliente, on_delete=models.CASCADE, verbose_name="Cliente")
     Usr_codigo = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Usuario", default=0)
     
     class Meta:

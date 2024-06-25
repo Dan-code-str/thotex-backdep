@@ -7,7 +7,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 class Cliente(models.Model):
     Cl_codigo = models.AutoField(primary_key=True)
-    Per_nombre = models.OneToOneField(Persona, on_delete=models.CASCADE)
+    Cl_nombre = models.CharField(max_length=50, verbose_name='Nombre')
     Usr_codigo = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Usuario")
 
     class Meta:
@@ -16,7 +16,7 @@ class Cliente(models.Model):
         verbose_name_plural = "Clientes"
 
     def __str__(self) -> str:
-        return self.Per_nombre.Per_nombre
+        return self.Cl_nombre
 
 
 class Proveedor(models.Model):

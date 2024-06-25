@@ -18,7 +18,7 @@ class Persona(models.Model):
     Per_apellido = models.CharField(max_length = 50, verbose_name='Apellido')
     Per_correo = models.EmailField(max_length = 50, verbose_name='Correo', unique=True)
     Per_telefono = models.PositiveIntegerField(validators=[MaxValueValidator(9999999999), MinValueValidator(1000000000)], verbose_name='Telefono')
-    Mun_nombre = models.ForeignKey(Municipio, verbose_name="Municipio", on_delete=models.CASCADE)
+    # Mun_nombre = models.ForeignKey(Municipio, verbose_name="Municipio", on_delete=models.CASCADE)
 
     class Meta:
         db_table = "Persona"
