@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'productos',
     'terceros',
     'transacciones',
+    'calendario',
 ]
 
 MIDDLEWARE = [
@@ -153,7 +154,7 @@ DATABASES = {
         'NAME': 'thotexv1',
         'USER': 'admin',
         'PASSWORD': 'thotex2024',
-        'HOST': 'thotexdb.cpy8w6soo6le.us-east-2.rds.amazonaws.com',  # or the hostname where your MySQL server is running
+        'HOST': 'thotexdb.cnqs88io4228.us-east-2.rds.amazonaws.com',  # or the hostname where your MySQL server is running
         'PORT': '3306',      # or the port on which your MySQL server is listening
     }
 }

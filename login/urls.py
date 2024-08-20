@@ -33,6 +33,7 @@ urlpatterns = [
    path('municipios/<int:pk>', MunicipioDetalle.as_view(), name='municipio'),
    path('departamentos/', DepartamentoLista.as_view(), name='departamentos'),
    path('departamentos/<int:pk>', DepartamentoDetalle.as_view(), name='departamento'),
+   path('departamento/<int:Dep_id>/municipios/', DepartamentoMunicipiosListView.as_view(), name='departamento-municipios'),
    path('activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/', activate, name='activate'),
 ]
 

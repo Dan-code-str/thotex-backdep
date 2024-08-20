@@ -16,15 +16,6 @@ from .token import account_activation_token, account_activation_token_verifier
 from django.core.mail import EmailMessage
 
 User = get_user_model()
-
-# class RegisterView(APIView):
-    
-#     def post(self, request):
-                
-#         serializer = UserSerializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         serializer.save()
-#         return Response(serializer.data)
     
 class RegisterView(APIView):
     def post(self, request):
@@ -141,6 +132,22 @@ class DepartamentoLista(generics.ListCreateAPIView):
 class DepartamentoDetalle(generics.RetrieveUpdateDestroyAPIView):
     queryset = Departamento.objects.all()
     serializer_class = DepartamentoSerializer
+
+class DepartamentoMunicipiosListView(generics.RetrieveAPIView):
+    queryset = Departamento.objects.all()
+    serializer_class = DepartamentoSerializer
+    lookup_field = 'Dep_id'
+
+    def get(self, request, *args, **kwargs):
+        departamento = self.get_object()  # Obtén el objeto Departamento
+        serializer = self.get_serializer(departamento)  # Serializa el departamento
+        
+        # Devuelve los datos en el formato deseado
+        context = {
+            'data': serializer.data,
+        }
+        
+        return Response(context)
                         
         
 

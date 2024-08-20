@@ -23,14 +23,27 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
     
 
-class MunicipioSerializer(serializers.ModelSerializer):
+# class MunicipioSerializer(serializers.ModelSerializer):
     
-    class Meta:     
+#     class Meta:     
+#         model = Municipio
+#         fields = '__all__'
+
+# class DepartamentoSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Departamento
+#         fields = '__all__'
+
+
+class MunicipioSerializer(serializers.ModelSerializer):
+    class Meta:
         model = Municipio
-        fields = '__all__'
+        fields = ['Mun_id', 'Mun_nombre']
 
 class DepartamentoSerializer(serializers.ModelSerializer):
+    municipios = MunicipioSerializer(many=True, read_only=True, source='municipio_set')
+
     class Meta:
         model = Departamento
-        fields = '__all__'
+        fields = ['Dep_id', 'Dep_nombre', 'municipios']
         

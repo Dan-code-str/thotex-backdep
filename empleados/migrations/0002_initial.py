@@ -14,14 +14,14 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='persona',
-            name='Mun_nombre',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='login.municipio', verbose_name='Municipio'),
-        ),
-        migrations.AddField(
-            model_name='empleado',
-            name='Per_nombre',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='empleados.persona'),
-        ),
+        # migrations.AddField(
+        #     model_name='persona',
+        #     name='Mun_nombre',
+        #     field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='login.municipio', verbose_name='Municipio'),
+        # ),
+        # migrations.AddField(
+        #     model_name='empleado',
+        #     name='Per_nombre',
+        #     field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='empleados.persona'),
+        # ),
     ]

@@ -26,4 +26,5 @@ urlpatterns = [
     path('api/v1.0/', include('productos.urls')),
     path('api/v1.0/', include('transacciones.urls')),
     path('api/v1.0/', include('terceros.urls')),
+    path('api/v1.0/', include('calendario.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
