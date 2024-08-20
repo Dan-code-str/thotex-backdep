@@ -1,0 +1,9 @@
+{% autoescape off %}  
+Hola {{ user.username }},  
+Por favor, haz clic en el siguiente enlace para confirmar tu registro:  
+http://{{ domain }}{% url 'activate' uidb64=uid token=token %} 
+
+Si no has solicitado esta cuenta, puedes ignorar este correo.
+Gracias,
+El equipo de Thotex
+{% endautoescape %}  
